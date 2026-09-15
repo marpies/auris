@@ -12,6 +12,19 @@
 import SwiftUI
 
 struct MusicItemView: View {
+    private var itemIcon: String {
+        switch item.type {
+        case .song:
+            return "music.note"
+        case .album:
+            return "rectangle.stack.badge.play"
+        case .playlist:
+            return "music.note.list"
+        case .radio:
+            return "dot.radiowaves.left.and.right"
+        }
+    }
+    
     private let item: MusicItem
 
     init(item: MusicItem) {
@@ -25,17 +38,25 @@ struct MusicItemView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color(.secondarySystemBackground))
                         .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 3)
-
-                    Image(systemName: "music.note")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: proxy.size.width * 0.5, height: proxy.size.height * 0.5)
+                    
+                    if let artworkURL = item.imageURL {
+                        AsyncImage(url: artworkURL) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        } placeholder: {
+                            placeholderImage(proxy: proxy)
+                        }
+                    } else {
+                        placeholderImage(proxy: proxy)
+                    }
                 }
             }
             .aspectRatio(1, contentMode: .fit)
             .frame(maxWidth: .infinity)
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(item.title)
                     .lineLimit(1)
                     .font(.caption.bold())
@@ -47,6 +68,13 @@ struct MusicItemView: View {
             }
             .padding(.horizontal, 4)
         }
+    }
+    
+    private func placeholderImage(proxy: GeometryProxy) -> some View {
+        Image(systemName: itemIcon)
+            .resizable()
+            .scaledToFit()
+            .frame(width: proxy.size.width * 0.5, height: proxy.size.height * 0.5)
     }
 }
 
