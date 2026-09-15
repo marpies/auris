@@ -19,7 +19,7 @@ struct MusicItemView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
             GeometryReader { proxy in
                 ZStack {
                     RoundedRectangle(cornerRadius: 12)
@@ -37,13 +37,15 @@ struct MusicItemView: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.title)
-                    .font(.headline)
+                    .lineLimit(1)
+                    .font(.caption.bold())
                 
                 Text(item.subtitle)
-                    .font(.subheadline)
+                    .lineLimit(1)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 4)
         }
     }
 }
