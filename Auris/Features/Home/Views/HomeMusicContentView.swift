@@ -25,7 +25,7 @@ struct HomeMusicContentView: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns) {
+            LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(items) { item in
                     MusicItemView(item: item)
                 }
