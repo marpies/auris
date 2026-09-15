@@ -9,12 +9,17 @@
 //  accordance with the terms of the accompanying license agreement.
 //  
 
-import MusicKit
 import Foundation
 
 struct DefaultHomeContentRepository: HomeContentRepository {
+    private let musicAuthorizationService: any MusicAuthorizationService
+
+    init(musicAuthorizationService: any MusicAuthorizationService) {
+        self.musicAuthorizationService = musicAuthorizationService
+    }
+    
     func load() async throws -> HomeContent {
-        let status = MusicAuthorization.currentStatus
+        let status = musicAuthorizationService.currentStatus
         
         switch status {
         case .notDetermined:

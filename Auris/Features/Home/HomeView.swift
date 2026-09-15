@@ -49,7 +49,17 @@ struct HomeView: View {
             return .unauth
         }
     }
-    
-    let viewModel = HomeViewModel(homeContentRepository: MockHomeContentRepository())
+    struct MockMusicAuthorizationService: MusicAuthorizationService {
+        var currentStatus: MusicAuthorizationStatus = .notDetermined
+        
+        func requestAuthorization() async -> MusicAuthorizationStatus {
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            
+            return .authorized
+        }
+    }
+    let dependencies = HomeViewModelDependencies(homeContentRepository: MockHomeContentRepository(),
+                                                 musicAuthorizationService: MockMusicAuthorizationService())
+    let viewModel = HomeViewModel(dependencies: dependencies)
     return HomeView(viewModel: viewModel)
 }

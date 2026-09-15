@@ -16,13 +16,15 @@ import Foundation
 final class HomeViewModel {
     private(set) var state: HomeState = .loading
     
-    private let homeContentRepository: any HomeContentRepository
-    
-    init(homeContentRepository: any HomeContentRepository) {
-        self.homeContentRepository = homeContentRepository
+    private let dependencies: HomeViewModelDependencies
+
+    init(dependencies: HomeViewModelDependencies) {
+        self.dependencies = dependencies
     }
     
     func load() async throws {
+        state = .loading
+        
         let content = try await homeContentRepository.load()
         
         switch content {
@@ -37,5 +39,20 @@ final class HomeViewModel {
         }
     }
 
-    func requestAuthorization() async {}
+    func requestAuthorization() async {
+        let status = await musicAuthorizationService.requestAuthorization()
+        
+        switch status {
+        case .notDetermined:
+            return
+            
+        case .authorized, .denied, .restricted:
+            try? await load()
+        }
+    }
+}
+
+extension HomeViewModel {
+    var homeContentRepository: any HomeContentRepository { dependencies.homeContentRepository }
+    var musicAuthorizationService: any MusicAuthorizationService { dependencies.musicAuthorizationService }
 }

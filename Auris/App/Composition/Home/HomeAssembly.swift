@@ -14,15 +14,22 @@ import Swinject
 
 struct HomeAssembly: SafeAssembly {
     func assemble(container: Container, resolverProvider: any ResolverProvider) {
+        container.register((any MusicAuthorizationService).self) { _ in
+            return DefaultMusicAuthorizationService()
+        }
         container.register((any HomeFactory).self) { _ in
             return DefaultHomeFactory(resolver: resolverProvider)
         }
         container.register((any HomeContentRepository).self) { _ in
-            return DefaultHomeContentRepository()
+            let service = resolverProvider.resolve((any MusicAuthorizationService).self)
+            return DefaultHomeContentRepository(musicAuthorizationService: service)
         }
         container.register(HomeViewModel.self) { _ in
-            let repository = resolverProvider.resolve((any HomeContentRepository).self)
-            return HomeViewModel(homeContentRepository: repository)
+            let homeContentRepository = resolverProvider.resolve((any HomeContentRepository).self)
+            let musicAuthorizationService = resolverProvider.resolve((any MusicAuthorizationService).self)
+            let dependencies = HomeViewModelDependencies(homeContentRepository: homeContentRepository,
+                                                         musicAuthorizationService: musicAuthorizationService)
+            return HomeViewModel(dependencies: dependencies)
         }
     }
 }
