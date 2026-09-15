@@ -19,8 +19,24 @@ struct HomeView: View {
     }
     
     var body: some View {
-        VStack {
-            Text("Hello Home")
+        Group {
+            switch viewModel.state {
+            case .loading:
+                ProgressView()
+            case .content(let items):
+                HomeMusicContentView(items: items)
+            case .denied:
+                HomeDeniedView()
+            case .restricted:
+                HomeRestrictedView()
+            case .unauth:
+                HomeUnauthView {
+                    await viewModel.requestAuthorization()
+                }
+            }
+        }
+        .task {
+            try? await viewModel.load()
         }
     }
 }

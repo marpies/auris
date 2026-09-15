@@ -29,11 +29,13 @@ final class HomeViewModel {
         case .denied:
             state = .denied
         case .library:
-            state = .content
+            state = .content([])
         case .restricted:
             state = .restricted
         case .unauth:
             state = .unauth
         }
     }
+
+    func requestAuthorization() async {}
 }

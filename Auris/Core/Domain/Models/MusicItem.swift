@@ -1,5 +1,5 @@
 //
-//  HomeState.swift
+//  MusicItem.swift
 //  Auris
 //
 //  Created by Marcel Piešťanský on 09/14/2026.
@@ -11,10 +11,14 @@
 
 import Foundation
 
-enum HomeState {
-    case loading
-    case content([MusicItem])
-    case denied
-    case restricted
-    case unauth
+enum MusicItemType {
+    case song, album, playlist, radio
+}
+
+struct MusicItem: Identifiable, Equatable, Hashable, Sendable {
+    let id: UUID
+    let type: MusicItemType
+    let title: String
+    let subtitle: String
+    let imageURL: URL?
 }
