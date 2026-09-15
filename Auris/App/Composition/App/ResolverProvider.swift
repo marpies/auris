@@ -13,4 +13,5 @@ import Swinject
 
 protocol ResolverProvider {
     func resolve<Service>(_ service: Service.Type) -> Service
+    func resolve<Service, Argument>(_ service: Service.Type, argument: Argument) -> Service
 }

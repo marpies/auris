@@ -31,6 +31,13 @@ final class AppCompositionRoot: ResolverProvider {
         }
         return service
     }
+
+    func resolve<Service, Argument>(_ type: Service.Type, argument: Argument) -> Service {
+        guard let service = resolver.resolve(type, argument: argument) else {
+            preconditionFailure("Missing Swinject registration: \(type)")
+        }
+        return service
+    }
     
     func register() {
         let assemblies: [SafeAssembly] = [
