@@ -32,7 +32,7 @@ struct ContentView: View {
             
             LibraryFlowView()
                 .tabItem {
-                    Label("Library", systemImage: "music.note.square.stack.fill")
+                    Label("Library", systemImage: "play.square.stack")
                 }
             
             SearchFlowView()
