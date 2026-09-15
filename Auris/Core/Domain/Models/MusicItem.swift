@@ -11,12 +11,12 @@
 
 import Foundation
 
-enum MusicItemType {
+enum MusicItemType: Hashable, Sendable {
     case song, album, playlist, radio
 }
 
 struct MusicItem: Identifiable, Equatable, Hashable, Sendable {
-    let id: UUID
+    let id: String
     let type: MusicItemType
     let title: String
     let subtitle: String

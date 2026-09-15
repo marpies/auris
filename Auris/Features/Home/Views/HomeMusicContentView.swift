@@ -24,10 +24,13 @@ struct HomeMusicContentView: View {
     }
     
     var body: some View {
-        LazyVGrid(columns: columns) {
-            ForEach(items) { item in
-                MusicItemView(item: item)
+        ScrollView {
+            LazyVGrid(columns: columns) {
+                ForEach(items) { item in
+                    MusicItemView(item: item)
+                }
             }
+            .padding()
         }
     }
 }

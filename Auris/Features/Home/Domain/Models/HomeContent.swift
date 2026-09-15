@@ -13,7 +13,7 @@ import Foundation
 
 enum HomeContent {
     case denied
-    case library
+    case library([MusicItem])
     case restricted
     case unauth
 }
