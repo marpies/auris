@@ -17,4 +17,5 @@ enum HomeState {
     case denied
     case restricted
     case unauth
+    case error
 }

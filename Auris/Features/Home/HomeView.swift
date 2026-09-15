@@ -33,10 +33,14 @@ struct HomeView: View {
                 HomeUnauthView {
                     await viewModel.requestAuthorization()
                 }
+            case .error:
+                HomeErrorView {
+                    await viewModel.load()
+                }
             }
         }
         .task {
-            try? await viewModel.load()
+            await viewModel.load()
         }
     }
 }

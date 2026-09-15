@@ -22,20 +22,30 @@ final class HomeViewModel {
         self.dependencies = dependencies
     }
     
-    func load() async throws {
+    func load() async {
         state = .loading
-        
-        let content = try await homeContentRepository.load()
-        
-        switch content {
-        case .denied:
-            state = .denied
-        case .library:
-            state = .content([])
-        case .restricted:
-            state = .restricted
-        case .unauth:
-            state = .unauth
+
+        do {
+            let content = try await homeContentRepository.load()
+            
+            try Task.checkCancellation()
+
+            switch content {
+            case .denied:
+                state = .denied
+            case .library:
+                state = .content([])
+            case .restricted:
+                state = .restricted
+            case .unauth:
+                state = .unauth
+            }
+        } catch {
+            guard !(error is CancellationError), !Task.isCancelled else {
+                return
+            }
+
+            state = .error
         }
     }
 
@@ -47,7 +57,7 @@ final class HomeViewModel {
             return
             
         case .authorized, .denied, .restricted:
-            try? await load()
+            await load()
         }
     }
 }
