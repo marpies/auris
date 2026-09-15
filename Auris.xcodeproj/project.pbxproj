@@ -33,9 +33,22 @@
 		C357777E3057E86D0095956D /* AurisUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AurisUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C35778023059438A0095956D /* Exceptions for "Auris" folder in "Auris" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				App/Info.plist,
+			);
+			target = C35777663057E86B0095956D /* Auris */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C35777693057E86B0095956D /* Auris */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C35778023059438A0095956D /* Exceptions for "Auris" folder in "Auris" target */,
+			);
 			path = Auris;
 			sourceTree = "<group>";
 		};
@@ -410,8 +423,10 @@
 				DEVELOPMENT_TEAM = Q6T2359V7Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Auris/App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Auris;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Play and manage your Apple Music library in Auris.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -445,8 +460,10 @@
 				DEVELOPMENT_TEAM = Q6T2359V7Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Auris/App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Auris;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Play and manage your Apple Music library in Auris.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
