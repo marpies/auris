@@ -10,7 +10,6 @@
 //  
 
 import Foundation
-import Swinject
 
 struct DefaultHomeFactory: HomeFactory {
     private let resolver: ResolverProvider
