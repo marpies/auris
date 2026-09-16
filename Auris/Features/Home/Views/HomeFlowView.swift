@@ -13,7 +13,7 @@ import Foundation
 import SwiftUI
 
 struct HomeFlowView: View {
-    @State private var coordinator: HomeCoordinator
+    private let coordinator: HomeCoordinator
 
     init(coordinator: HomeCoordinator) {
         self.coordinator = coordinator
