@@ -23,7 +23,7 @@ func getDebugLogs() -> [DebugLogData] {
 #endif
 
 final fileprivate class Logger {
-    static let tag: String = "PDM"
+    static let tag: String = "Auris"
     
     static var loggerLevel: LoggerLevel = .debug
     static var logNetworking: Bool = true
