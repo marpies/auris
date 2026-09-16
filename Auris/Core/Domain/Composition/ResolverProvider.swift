@@ -9,7 +9,7 @@
 //  accordance with the terms of the accompanying license agreement.
 //  
 
-import Swinject
+import Foundation
 
 protocol ResolverProvider {
     func resolve<Service>(_ service: Service.Type) -> Service
