@@ -1,8 +1,8 @@
 //
-//  HomeErrorView.swift
+//  RetryErrorView.swift
 //  Auris
 //
-//  Created by Marcel Piešťanský on 09/15/2026.
+//  Created by Marcel Piešťanský on 09/16/2026.
 //  Copyright © 2026 Marcel Piešťanský. All rights reserved.
 //  
 //  This program is free software. You can redistribute and/or modify it in
@@ -11,13 +11,19 @@
 
 import SwiftUI
 
-struct HomeErrorView: View {
+struct RetryErrorView: View {
+    private let title: String
+    private let message: String
+    private let buttonTitle: String
     private let onReload: () async -> Void
 
-    init(onReload: @escaping () async -> Void) {
+    init(title: String, message: String, buttonTitle: String = "Try Again", onReload: @escaping () async -> Void) {
+        self.title = title
+        self.message = message
+        self.buttonTitle = buttonTitle
         self.onReload = onReload
     }
-
+    
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "exclamationmark.triangle")
@@ -26,15 +32,15 @@ struct HomeErrorView: View {
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 8) {
-                Text("Something went wrong")
+                Text(title)
                     .font(.largeTitle.bold())
 
-                Text("Auris couldn’t load your music. Please try again.")
+                Text(message)
                     .font(.body)
                     .multilineTextAlignment(.center)
             }
 
-            Button("Try Again") {
+            Button(buttonTitle) {
                 Task {
                     await onReload()
                 }
@@ -46,5 +52,5 @@ struct HomeErrorView: View {
 }
 
 #Preview {
-    HomeErrorView {}
+    RetryErrorView(title: "Something went wrong", message: "Auris couldn’t load your music library. Please try again.") { }
 }

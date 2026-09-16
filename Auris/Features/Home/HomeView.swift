@@ -34,7 +34,7 @@ struct HomeView: View {
                     await viewModel.requestAuthorization()
                 }
             case .error:
-                HomeErrorView {
+                RetryErrorView(title: "Something went wrong.", message: "Your content could not be loaded at the moment.") {
                     await viewModel.load()
                 }
             }
