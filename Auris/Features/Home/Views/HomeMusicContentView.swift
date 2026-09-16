@@ -27,7 +27,10 @@ struct HomeMusicContentView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(items) { item in
-                    MusicItemView(item: item)
+                    NavigationLink(value: item) {
+                        MusicItemView(item: item)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .padding()
@@ -37,15 +40,65 @@ struct HomeMusicContentView: View {
 
 #Preview {
     HomeMusicContentView(items: [
-        MusicItem(id: "song:1", type: .song, title: "I Bet You Look Good on the Dancefloor", subtitle: "Arctic Monkeys • 3m 38s", imageURL: nil),
-        MusicItem(id: "song:2", type: .song, title: "Dreams", subtitle: "Fleetwood Mac • 4m 18s", imageURL: nil),
-        MusicItem(id: "song:3", type: .song, title: "Midnight City", subtitle: "M83 • 4m 3s", imageURL: nil),
-        MusicItem(id: "song:4", type: .song, title: "Redbone", subtitle: "Childish Gambino • 5m 27s", imageURL: nil),
-        MusicItem(id: "album:1", type: .album, title: "AM", subtitle: "Arctic Monkeys • 12 tracks", imageURL: nil),
-        MusicItem(id: "album:2", type: .album, title: "Rumours", subtitle: "Fleetwood Mac • 11 tracks", imageURL: nil),
-        MusicItem(id: "album:3", type: .album, title: "Random Access Memories", subtitle: "Daft Punk • 13 tracks", imageURL: nil),
-        MusicItem(id: "playlist:1", type: .playlist, title: "Morning Focus", subtitle: "Apple Music", imageURL: nil),
-        MusicItem(id: "playlist:2", type: .playlist, title: "Late Night Drive", subtitle: "Apple Music", imageURL: nil),
-        MusicItem(id: "playlist:3", type: .playlist, title: "Discover Mix", subtitle: "Apple Music", imageURL: nil)
+        MusicItem(sourceID: "1",
+                  source: .library,
+                  type: .song,
+                  title: "I Bet You Look Good on the Dancefloor",
+                  subtitle: "Arctic Monkeys • 3m 38s",
+                  imageURL: nil),
+        MusicItem(sourceID: "2",
+                  source: .library,
+                  type: .song,
+                  title: "Dreams",
+                  subtitle: "Fleetwood Mac • 4m 18s",
+                  imageURL: nil),
+        MusicItem(sourceID: "3",
+                  source: .library,
+                  type: .song,
+                  title: "Midnight City",
+                  subtitle: "M83 • 4m 3s",
+                  imageURL: nil),
+        MusicItem(sourceID: "4",
+                  source: .library,
+                  type: .song,
+                  title: "Redbone",
+                  subtitle: "Childish Gambino • 5m 27s",
+                  imageURL: nil),
+        MusicItem(sourceID: "1",
+                  source: .library,
+                  type: .album,
+                  title: "AM",
+                  subtitle: "Arctic Monkeys • 12 tracks",
+                  imageURL: nil),
+        MusicItem(sourceID: "2",
+                  source: .library,
+                  type: .album,
+                  title: "Rumours",
+                  subtitle: "Fleetwood Mac • 11 tracks",
+                  imageURL: nil),
+        MusicItem(sourceID: "3",
+                  source: .library,
+                  type: .album,
+                  title: "Random Access Memories",
+                  subtitle: "Daft Punk • 13 tracks",
+                  imageURL: nil),
+        MusicItem(sourceID: "1",
+                  source: .library,
+                  type: .playlist,
+                  title: "Morning Focus",
+                  subtitle: "Apple Music",
+                  imageURL: nil),
+        MusicItem(sourceID: "2",
+                  source: .library,
+                  type: .playlist,
+                  title: "Late Night Drive",
+                  subtitle: "Apple Music",
+                  imageURL: nil),
+        MusicItem(sourceID: "3",
+                  source: .library,
+                  type: .playlist,
+                  title: "Discover Mix",
+                  subtitle: "Apple Music",
+                  imageURL: nil)
     ])
 }

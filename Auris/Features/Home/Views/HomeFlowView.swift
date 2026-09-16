@@ -22,6 +22,9 @@ struct HomeFlowView: View {
     var body: some View {
         NavigationStack {
             HomeView(viewModel: coordinator.viewModel)
+                .navigationDestination(for: MusicItem.self) { item in
+                    MusicItemDetailView(viewModel: coordinator.makeDetailViewModel(item: item))
+                }
         }
     }
 }

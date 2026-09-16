@@ -23,4 +23,8 @@ final class HomeCoordinator {
         
         viewModel = factory.makeViewModel()
     }
+
+    func makeDetailViewModel(item: MusicItem) -> MusicItemDetailViewModel {
+        factory.makeDetailViewModel(item: item)
+    }
 }

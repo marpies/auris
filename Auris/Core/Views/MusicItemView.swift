@@ -79,5 +79,11 @@ struct MusicItemView: View {
 }
 
 #Preview {
-    MusicItemView(item: MusicItem(id: "song:example", type: .song, title: "I Bet You Look Good on the Dancefloor", subtitle: "Arctic Monkeys • 3m 38s", imageURL: nil))
+    let item = MusicItem(sourceID: "example",
+                         source: .library,
+                         type: .song,
+                         title: "I Bet You Look Good on the Dancefloor",
+                         subtitle: "Arctic Monkeys • 3m 38s",
+                         imageURL: nil)
+    MusicItemView(item: item)
 }

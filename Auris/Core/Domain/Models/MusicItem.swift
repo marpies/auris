@@ -16,7 +16,12 @@ enum MusicItemType: Hashable, Sendable {
 }
 
 struct MusicItem: Identifiable, Equatable, Hashable, Sendable {
-    let id: String
+    var id: MusicItemIdentity {
+        MusicItemIdentity(sourceID: sourceID, source: source, type: type)
+    }
+
+    let sourceID: String
+    let source: MusicItemSource
     let type: MusicItemType
     let title: String
     let subtitle: String

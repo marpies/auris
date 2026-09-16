@@ -24,6 +24,14 @@ struct HomeAssembly: SafeAssembly {
             let authorizationService = resolverProvider.resolve((any MusicAuthorizationService).self)
             return DefaultHomeContentRepository(musicAuthorizationService: authorizationService)
         }
+        container.register((any MusicItemDetailRepository).self) { _ in
+            let authorizationService = resolverProvider.resolve((any MusicAuthorizationService).self)
+            return DefaultMusicItemDetailRepository(musicAuthorizationService: authorizationService)
+        }
+        container.register(MusicItemDetailViewModel.self) { (_, item: MusicItem) in
+            let detailRepository = resolverProvider.resolve((any MusicItemDetailRepository).self)
+            return MusicItemDetailViewModel(item: item, musicItemDetailRepository: detailRepository)
+        }
         container.register(HomeViewModel.self) { _ in
             let homeContentRepository = resolverProvider.resolve((any HomeContentRepository).self)
             let musicAuthorizationService = resolverProvider.resolve((any MusicAuthorizationService).self)

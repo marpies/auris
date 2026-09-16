@@ -70,23 +70,21 @@ struct DefaultHomeContentRepository: HomeContentRepository {
             subtitle = song.artistName
         }
 
-        return MusicItem(
-            id: "song:\(song.id.rawValue)",
-            type: .song,
-            title: song.title,
-            subtitle: subtitle,
-            imageURL: song.artwork?.url(width: 600, height: 600)
-        )
+        return MusicItem(sourceID: song.id.rawValue,
+                         source: .library,
+                         type: .song,
+                         title: song.title,
+                         subtitle: subtitle,
+                         imageURL: song.artwork?.url(width: 600, height: 600))
     }
 
     private func makeMusicItem(from album: Album) -> MusicItem {
-        MusicItem(
-            id: "album:\(album.id.rawValue)",
-            type: .album,
-            title: album.title,
-            subtitle: "\(album.artistName) • \(album.trackCount) tracks",
-            imageURL: album.artwork?.url(width: 600, height: 600)
-        )
+        MusicItem(sourceID: album.id.rawValue,
+                  source: .library,
+                  type: .album,
+                  title: album.title,
+                  subtitle: "\(album.artistName) • \(album.trackCount) tracks",
+                  imageURL: album.artwork?.url(width: 600, height: 600))
     }
 
     private func makeMusicItem(from playlist: Playlist) -> MusicItem {
@@ -94,12 +92,11 @@ struct DefaultHomeContentRepository: HomeContentRepository {
             name.isEmpty ? nil : name
         }
 
-        return MusicItem(
-            id: "playlist:\(playlist.id.rawValue)",
-            type: .playlist,
-            title: playlist.name,
-            subtitle: curatorName ?? "Playlist",
-            imageURL: playlist.artwork?.url(width: 600, height: 600)
-        )
+        return MusicItem(sourceID: playlist.id.rawValue,
+                         source: .library,
+                         type: .playlist,
+                         title: playlist.name,
+                         subtitle: curatorName ?? "Playlist",
+                         imageURL: playlist.artwork?.url(width: 600, height: 600))
     }
 }

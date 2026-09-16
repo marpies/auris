@@ -22,4 +22,8 @@ struct DefaultHomeFactory: HomeFactory {
     func makeViewModel() -> HomeViewModel {
         resolver.resolve(HomeViewModel.self)
     }
+
+    func makeDetailViewModel(item: MusicItem) -> MusicItemDetailViewModel {
+        resolver.resolve(MusicItemDetailViewModel.self, argument: item)
+    }
 }
