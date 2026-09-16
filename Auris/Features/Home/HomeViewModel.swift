@@ -41,9 +41,7 @@ final class HomeViewModel {
                 state = .unauth
             }
         } catch {
-            guard !(error is CancellationError), !Task.isCancelled else {
-                return
-            }
+            guard !Task.isCancelled else { return }
 
             state = .error
         }

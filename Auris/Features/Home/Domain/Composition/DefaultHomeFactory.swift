@@ -12,9 +12,9 @@
 import Foundation
 
 struct DefaultHomeFactory: HomeFactory {
-    private let resolver: ResolverProvider
+    private let resolver: any ResolverProvider
 
-    init(resolver: ResolverProvider) {
+    init(resolver: any ResolverProvider) {
         self.resolver = resolver
     }
     
