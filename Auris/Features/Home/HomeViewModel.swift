@@ -33,8 +33,8 @@ final class HomeViewModel {
             switch content {
             case .denied:
                 state = .denied
-            case .library(let items):
-                state = .content(items)
+            case .library:
+                state = .content
             case .restricted:
                 state = .restricted
             case .unauth:

@@ -13,9 +13,18 @@ import Foundation
 import SwiftUI
 
 struct LibraryFlowView: View {
+    private let coordinator: LibraryCoordinator
+
+    init(coordinator: LibraryCoordinator) {
+        self.coordinator = coordinator
+    }
+    
     var body: some View {
         NavigationStack {
-            LibraryView()
+            LibraryView(viewModel: coordinator.viewModel)
+                .navigationDestination(for: MusicItem.self) { item in
+                    MusicItemDetailView(viewModel: coordinator.makeDetailViewModel(item: item))
+                }
         }
     }
 }

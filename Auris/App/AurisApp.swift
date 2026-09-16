@@ -20,9 +20,9 @@ struct AurisApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(homeCoordinator: HomeCoordinator(
-                factory: compositionRoot.resolve((any HomeFactory).self)
-            ))
+            ContentView(
+                homeCoordinator: HomeCoordinator(factory: compositionRoot.resolve((any HomeFactory).self)),
+                libraryCoordinator: LibraryCoordinator(factory: compositionRoot.resolve((any LibraryFactory).self)))
         }
     }
 }

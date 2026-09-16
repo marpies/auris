@@ -1,8 +1,8 @@
 //
-//  HomeMusicContentView.swift
+//  LibraryMusicContentView.swift
 //  Auris
 //
-//  Created by Marcel Piešťanský on 09/14/2026.
+//  Created by Marcel Piešťanský on 09/16/2026.
 //  Copyright © 2026 Marcel Piešťanský. All rights reserved.
 //  
 //  This program is free software. You can redistribute and/or modify it in
@@ -12,7 +12,7 @@
 import Foundation
 import SwiftUI
 
-struct HomeMusicContentView: View {
+struct LibraryMusicContentView: View {
     private let columns: [GridItem] = [
         GridItem(.adaptive(minimum: 140), spacing: 16)
     ]
@@ -39,7 +39,7 @@ struct HomeMusicContentView: View {
 }
 
 #Preview {
-    HomeMusicContentView(items: [
+    LibraryMusicContentView(items: [
         MusicItem(sourceID: "1",
                   source: .library,
                   type: .song,

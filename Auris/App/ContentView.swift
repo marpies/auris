@@ -13,9 +13,11 @@ import SwiftUI
 
 struct ContentView: View {
     private let homeCoordinator: HomeCoordinator
+    private let libraryCoordinator: LibraryCoordinator
 
-    init(homeCoordinator: HomeCoordinator) {
+    init(homeCoordinator: HomeCoordinator, libraryCoordinator: LibraryCoordinator) {
         self.homeCoordinator = homeCoordinator
+        self.libraryCoordinator = libraryCoordinator
     }
     
     var body: some View {
@@ -30,7 +32,7 @@ struct ContentView: View {
                     Label("Radio", systemImage: "dot.radiowaves.left.and.right")
                 }
             
-            LibraryFlowView()
+            LibraryFlowView(coordinator: libraryCoordinator)
                 .tabItem {
                     Label("Library", systemImage: "play.square.stack")
                 }

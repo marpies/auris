@@ -23,8 +23,8 @@ struct HomeView: View {
             switch viewModel.state {
             case .loading:
                 ProgressView()
-            case .content(let items):
-                HomeMusicContentView(items: items)
+            case .content:
+                Text("Custom content will be here")
             case .denied:
                 HomeDeniedView()
             case .restricted:
