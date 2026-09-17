@@ -1,5 +1,5 @@
 //
-//  MusicItemDetailRepository.swift
+//  MusicItemDetailContent.swift
 //  Auris
 //
 //  Created by Marcel Piešťanský on 09/15/2026.
@@ -9,7 +9,8 @@
 //  accordance with the terms of the accompanying license agreement.
 //
 
-protocol MusicItemDetailRepository {
-    func load(item: MusicItem) async throws -> MusicItemDetailData
-    func loadNextPage(cursor: MusicItemDetailPageCursor) async throws -> MusicItemDetailPage
+enum MusicItemDetailContent: Equatable, Sendable {
+    case song(MusicItemSong)
+    case songs([MusicItemSong])
+    case artist(MusicArtistDetail)
 }

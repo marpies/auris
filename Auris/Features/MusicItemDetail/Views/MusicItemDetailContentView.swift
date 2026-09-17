@@ -13,6 +13,9 @@ import SwiftUI
 
 struct MusicItemDetailContentView: View {
     let content: MusicItemDetailContent
+    let loadingSectionIDs: Set<MusicArtistSectionKind>
+    let failedSectionIDs: Set<MusicArtistSectionKind>
+    let loadNextPage: (MusicArtistSectionKind) async -> Void
 
     var body: some View {
         switch content {
@@ -41,6 +44,11 @@ struct MusicItemDetailContentView: View {
                     }
                 }
             }
+        case .artist(let detail):
+            MusicArtistDetailContentView(artistDetail: detail,
+                                         loadingSectionIDs: loadingSectionIDs,
+                                         failedSectionIDs: failedSectionIDs,
+                                         loadNextPage: loadNextPage)
         }
     }
 }

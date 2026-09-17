@@ -12,9 +12,23 @@
 @testable import Auris
 
 struct MusicItemDetailTestRepository: MusicItemDetailRepository {
-    let handler: (MusicItem) async throws -> MusicItemDetail
+    typealias DetailHandler = (MusicItem) async throws -> MusicItemDetailData
+    typealias PageHandler = (MusicItemDetailPageCursor) async throws -> MusicItemDetailPage
 
-    func load(item: MusicItem) async throws -> MusicItemDetail {
-        try await handler(item)
+    private let detailHandler: DetailHandler
+    private let pageHandler: PageHandler
+
+    init(detailHandler: @escaping DetailHandler,
+         pageHandler: @escaping PageHandler = { _ in throw MusicItemDetailError.unavailable }) {
+        self.detailHandler = detailHandler
+        self.pageHandler = pageHandler
+    }
+
+    func load(item: MusicItem) async throws -> MusicItemDetailData {
+        try await detailHandler(item)
+    }
+
+    func loadNextPage(cursor: MusicItemDetailPageCursor) async throws -> MusicItemDetailPage {
+        try await pageHandler(cursor)
     }
 }

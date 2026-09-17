@@ -18,6 +18,8 @@ struct MusicItemView: View {
             return "music.note"
         case .album:
             return "rectangle.stack.badge.play"
+        case .artist:
+            return "music.mic"
         case .playlist:
             return "music.note.list"
         case .radio:

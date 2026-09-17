@@ -12,7 +12,7 @@
 import Foundation
 
 enum MusicItemType: Hashable, Sendable {
-    case song, album, playlist, radio
+    case song, album, artist, playlist, radio
 }
 
 struct MusicItem: Identifiable, Equatable, Hashable, Sendable {

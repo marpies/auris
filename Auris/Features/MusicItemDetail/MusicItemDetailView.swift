@@ -35,34 +35,46 @@ struct MusicItemDetailView: View {
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 24) {
-                MusicItemDetailHeaderView(
-                    title: detail?.title ?? viewModel.item.title,
-                    subtitle: subtitle,
-                    imageURL: detail?.imageURL ?? viewModel.item.imageURL,
-                    type: viewModel.item.type
-                )
+                if viewModel.item.type == .artist {
+                    MusicArtistDetailHeaderView(title: detail?.title ?? viewModel.item.title,
+                                                subtitle: subtitle,
+                                                imageURL: detail?.imageURL ?? viewModel.item.imageURL)
+                } else {
+                    MusicItemDetailHeaderView(title: detail?.title ?? viewModel.item.title,
+                                              subtitle: subtitle,
+                                              imageURL: detail?.imageURL ?? viewModel.item.imageURL,
+                                              type: viewModel.item.type)
+                        .padding(.horizontal)
+                        .padding(.top)
+                }
 
                 switch viewModel.state {
                 case .loading:
                     ProgressView("Loading details…")
+                        .padding(.horizontal)
                 case .content(let detail):
-                    MusicItemDetailContentView(content: detail.content)
+                    MusicItemDetailContentView(content: detail.content,
+                                               loadingSectionIDs: viewModel.loadingSectionIDs,
+                                               failedSectionIDs: viewModel.failedSectionIDs,
+                                               loadNextPage: viewModel.loadNextPage)
+                        .padding(.horizontal, viewModel.item.type == .artist ? 0 : 16)
                 case .unavailable:
-                    ContentUnavailableView(
-                        "Music Unavailable", systemImage: "music.note",
-                        description: Text("This item is no longer available, or access to your music has changed.")
-                    )
+                    ContentUnavailableView("Music Unavailable",
+                                           systemImage: "music.note",
+                                           description: Text("This item is no longer available, or access to your music has changed."))
+                        .padding(.horizontal)
                 case .error:
                     VStack(spacing: 12) {
                         Text("Couldn’t load details.")
                         Button("Try Again", action: retry)
                             .buttonStyle(.bordered)
                     }
+                    .padding(.horizontal)
                 }
-
             }
-            .padding()
+            .padding(.bottom)
         }
+        .ignoresSafeArea(edges: viewModel.item.type == .artist ? .top : [])
         .navigationBarTitleDisplayMode(.inline)
         .task(id: reloadID) {
             await viewModel.load()
@@ -94,6 +106,20 @@ struct MusicItemDetailView: View {
                          type: .album,
                          title: "Rumours",
                          subtitle: "Fleetwood Mac",
+                         imageURL: nil)
+    let viewModel = MusicItemDetailViewModel(item: item,
+                                             musicItemDetailRepository: PreviewMusicItemDetailRepository())
+    NavigationStack {
+        MusicItemDetailView(viewModel: viewModel)
+    }
+}
+
+#Preview("Artist") {
+    let item = MusicItem(sourceID: "1",
+                         source: .catalog,
+                         type: .artist,
+                         title: "Fleetwood Mac",
+                         subtitle: "Rock",
                          imageURL: nil)
     let viewModel = MusicItemDetailViewModel(item: item,
                                              musicItemDetailRepository: PreviewMusicItemDetailRepository())
@@ -161,7 +187,7 @@ struct PreviewMusicItemDetailRepository: MusicItemDetailRepository {
     var loading = false
     var empty = false
 
-    func load(item: MusicItem) async throws -> MusicItemDetail {
+    func load(item: MusicItem) async throws -> MusicItemDetailData {
         if loading {
             try await Task.sleep(for: .seconds(2))
         }
@@ -170,11 +196,66 @@ struct PreviewMusicItemDetailRepository: MusicItemDetailRepository {
             throw URLError(.notConnectedToInternet)
         }
 
-        let song = MusicItemSong(title: "Dreams", artist: "Fleetwood Mac", album: "Rumours", duration: 258)
-        return MusicItemDetail(title: item.title,
-                               subtitle: item.subtitle,
-                               imageURL: nil,
-                               content: item.type == .song ? .song(song) : .songs(empty ? [] : [song, song]))
+        let tracks: [(title: String, duration: TimeInterval)] = [
+            ("Dreams", 258),
+            ("Second Hand News", 163),
+            ("Never Going Back Again", 134),
+            ("Don't Stop", 193),
+            ("Go Your Own Way", 218),
+            ("Songbird", 200),
+            ("The Chain", 270),
+            ("You Make Loving Fun", 216),
+            ("I Don't Want to Know", 195),
+            ("Oh Daddy", 236)
+        ]
+        let songs = tracks.enumerated().map { index, track in
+            MusicSongMetadata(sourceID: "preview-song-\(index)",
+                              source: item.source,
+                              title: track.title,
+                              artistName: "Fleetwood Mac",
+                              albumTitle: "Rumours",
+                              duration: track.duration,
+                              imageURL: nil)
+        }
+        let album = MusicAlbumMetadata(sourceID: "2",
+                                       source: item.source,
+                                       title: item.type == .album ? item.title : "Rumours",
+                                       artistName: "Fleetwood Mac",
+                                       trackCount: 11,
+                                       imageURL: nil)
+
+        switch item.type {
+        case .song:
+            return .song(songs[0])
+        case .artist:
+            let artist = MusicArtistMetadata(sourceID: item.sourceID,
+                                             source: item.source,
+                                             name: item.title,
+                                             genreNames: ["Rock"],
+                                             standardEditorialNotes: "A preview biography for the artist.",
+                                             shortEditorialNotes: nil,
+                                             imageURL: nil)
+            var relationships = MusicArtistRelationships()
+            relationships.latestRelease = album
+            relationships.topSongs = MusicItemDetailPage(items: songs.map(MusicItemMetadata.song), nextPageCursor: nil)
+            relationships.fullAlbums = MusicItemDetailPage(items: [.album(album)], nextPageCursor: nil)
+            return .artist(artist, relationships: relationships)
+        case .album:
+            return .album(album, songs: empty ? [] : songs)
+        case .playlist:
+            let playlist = MusicPlaylistMetadata(sourceID: item.sourceID,
+                                                 source: item.source,
+                                                 name: item.title,
+                                                 curatorName: item.subtitle,
+                                                 imageURL: nil)
+            return .playlist(playlist, songs: empty ? [] : songs)
+        case .radio:
+            throw MusicItemDetailError.unavailable
+        }
+    }
+
+    func loadNextPage(cursor: MusicItemDetailPageCursor) async throws -> MusicItemDetailPage {
+        MusicItemDetailPage(items: [], nextPageCursor: nil)
     }
 }
 #endif

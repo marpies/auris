@@ -86,40 +86,100 @@ struct MusicItemDetailRepositoryTests {
         let song = try makeSong(id: "1", extraAttributes: "")
         let result = DefaultMusicItemDetailRepository.makeSong(song)
         #expect(result.title == "Song 1")
-        #expect(result.artist == "Artist")
-        #expect(result.album == nil)
+        #expect(result.artistName == "Artist")
+        #expect(result.albumTitle == nil)
         #expect(result.duration == nil)
-        #expect(result.formattedDuration == nil)
 
         let complete = try makeSong(id: "2", extraAttributes: #", "albumName": "Album", "durationInMillis": 183000"#)
         let mapped = DefaultMusicItemDetailRepository.makeSong(complete)
-        #expect(mapped.album == "Album")
+        #expect(mapped.albumTitle == "Album")
         #expect(mapped.duration == 183)
-        #expect(mapped.formattedDuration?.isEmpty == false)
     }
 
     @Test func mapsCatalogSongDetail() throws {
         let song = try makeSong(id: "1", extraAttributes: #", "albumName": "Album""#)
         let detail = DefaultMusicItemDetailRepository.makeDetail(from: song)
-        #expect(detail.title == "Song 1")
-        #expect(detail.subtitle == "Artist")
-        #expect(detail.content == .song(DefaultMusicItemDetailRepository.makeSong(song)))
+
+        guard case .song(let metadata) = detail else {
+            Issue.record("Expected song metadata")
+            return
+        }
+
+        #expect(metadata.title == "Song 1")
+        #expect(metadata.artistName == "Artist")
+        #expect(metadata.albumTitle == "Album")
+        #expect(metadata.source == .catalog)
+    }
+
+    @Test func preservesLibraryIdentityAndRawTrackMetadata() async throws {
+        let song = try makeSong(id: "i.local", extraAttributes: #", "durationInMillis": 183000"#)
+        let songs = try await DefaultMusicItemDetailRepository.loadSongs(from: [.song(song)], source: .library)
+        #expect(songs.first?.sourceID == "i.local")
+        #expect(songs.first?.source == .library)
+        #expect(songs.first?.duration == 183)
+        #expect(songs.first?.albumTitle == nil)
     }
 
     @Test func mapsCatalogAlbumDetail() async throws {
         let album = try makeAlbum()
         let detail = try await DefaultMusicItemDetailRepository.makeDetail(from: album)
-        #expect(detail.title == "Album")
-        #expect(detail.subtitle == "Artist")
-        #expect(detail.content == .songs([]))
+
+        guard case .album(let metadata, let songs) = detail else {
+            Issue.record("Expected album metadata")
+            return
+        }
+
+        #expect(metadata.title == "Album")
+        #expect(metadata.artistName == "Artist")
+        #expect(songs.isEmpty)
     }
 
     @Test func mapsCatalogPlaylistDetail() async throws {
         let playlist = try makePlaylist()
         let detail = try await DefaultMusicItemDetailRepository.makeDetail(from: playlist)
-        #expect(detail.title == "Playlist")
-        #expect(detail.subtitle == "Curator")
-        #expect(detail.content == .songs([]))
+
+        guard case .playlist(let metadata, let songs) = detail else {
+            Issue.record("Expected playlist metadata")
+            return
+        }
+
+        #expect(metadata.name == "Playlist")
+        #expect(metadata.curatorName == "Curator")
+        #expect(songs.isEmpty)
+    }
+
+    @Test func mapsCatalogArtistDetail() async throws {
+        let musicAuthorizationService = MusicItemDetailTestAuthorizationService(currentStatus: .authorized)
+        let musicItemDetailRepository =
+            DefaultMusicItemDetailRepository(musicAuthorizationService: musicAuthorizationService)
+        let artist = try makeArtist()
+        let detail = await musicItemDetailRepository.makeDetail(from: artist)
+
+        guard case .artist(let metadata, let relationships) = detail else {
+            Issue.record("Expected artist metadata")
+            return
+        }
+
+        #expect(metadata.name == "Artist")
+        #expect(metadata.genreNames == ["Rock", "Alternative"])
+        #expect(metadata.standardEditorialNotes == "Biography")
+        #expect(metadata.shortEditorialNotes == nil)
+        #expect(relationships == MusicArtistRelationships())
+    }
+
+    @Test func rejectsLibraryArtistDetails() async {
+        let musicAuthorizationService = MusicItemDetailTestAuthorizationService(currentStatus: .authorized)
+        let musicItemDetailRepository =
+            DefaultMusicItemDetailRepository(musicAuthorizationService: musicAuthorizationService)
+        let item = Auris.MusicItem(sourceID: "1",
+                                   source: .library,
+                                   type: .artist,
+                                   title: "Artist",
+                                   subtitle: "",
+                                   imageURL: nil)
+        await #expect(throws: MusicItemDetailError.self) {
+            try await musicItemDetailRepository.load(item: item)
+        }
     }
 
     @Test func loadsAllPagesPreservingOrderAndDuplicates() async throws {
@@ -173,5 +233,23 @@ struct MusicItemDetailRepositoryTests {
         let json = #"{"id":"1","type":"playlists","attributes":{"name":"Playlist","curatorName":"Curator"}}"#
         let data = Data(json.utf8)
         return try JSONDecoder().decode(Playlist.self, from: data)
+    }
+
+    private func makeArtist() throws -> Artist {
+        let json = """
+        {
+            "id": "1",
+            "type": "artists",
+            "attributes": {
+                "name": "Artist",
+                "genreNames": ["Rock", "Alternative"],
+                "editorialNotes": {
+                    "standard": "Biography"
+                }
+            }
+        }
+        """
+        let data = Data(json.utf8)
+        return try JSONDecoder().decode(Artist.self, from: data)
     }
 }

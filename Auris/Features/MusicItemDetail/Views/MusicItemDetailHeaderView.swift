@@ -23,6 +23,8 @@ struct MusicItemDetailHeaderView: View {
             "music.note"
         case .album:
             "rectangle.stack.badge.play"
+        case .artist:
+            "music.mic"
         case .playlist:
             "music.note.list"
         case .radio:
