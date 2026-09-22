@@ -12,6 +12,7 @@
 import SwiftUI
 
 struct MusicItemDetailView: View {
+    @State private var headerCollapseProgress = 0.0
     @State private var viewModel: MusicItemDetailViewModel
     @State private var reloadID = 0
 
@@ -33,52 +34,96 @@ struct MusicItemDetailView: View {
     }
 
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 24) {
-                if viewModel.item.type == .artist {
-                    MusicArtistDetailHeaderView(title: detail?.title ?? viewModel.item.title,
-                                                subtitle: subtitle,
-                                                imageURL: detail?.imageURL ?? viewModel.item.imageURL)
-                } else {
-                    MusicItemDetailHeaderView(title: detail?.title ?? viewModel.item.title,
-                                              subtitle: subtitle,
-                                              imageURL: detail?.imageURL ?? viewModel.item.imageURL,
-                                              type: viewModel.item.type)
-                        .padding(.horizontal)
-                        .padding(.top)
-                }
-
-                switch viewModel.state {
-                case .loading:
-                    ProgressView("Loading details…")
-                        .padding(.horizontal)
-                case .content(let detail):
-                    MusicItemDetailContentView(content: detail.content,
-                                               loadingSectionIDs: viewModel.loadingSectionIDs,
-                                               failedSectionIDs: viewModel.failedSectionIDs,
-                                               loadNextPage: viewModel.loadNextPage)
-                        .padding(.horizontal, viewModel.item.type == .artist ? 0 : 16)
-                case .unavailable:
-                    ContentUnavailableView("Music Unavailable",
-                                           systemImage: "music.note",
-                                           description: Text("This item is no longer available, or access to your music has changed."))
-                        .padding(.horizontal)
-                case .error:
-                    VStack(spacing: 12) {
-                        Text("Couldn’t load details.")
-                        Button("Try Again", action: retry)
-                            .buttonStyle(.bordered)
+        GeometryReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 24) {
+                    Group {
+                        if viewModel.item.type == .artist {
+                            MusicArtistDetailHeaderView(title: detail?.title ?? viewModel.item.title,
+                                                        subtitle: subtitle,
+                                                        imageURL: detail?.imageURL ?? viewModel.item.imageURL)
+                        } else {
+                            MusicItemDetailHeaderView(title: detail?.title ?? viewModel.item.title,
+                                                      subtitle: subtitle,
+                                                      imageURL: detail?.imageURL ?? viewModel.item.imageURL,
+                                                      type: viewModel.item.type)
+                                .padding(.horizontal)
+                                .padding(.top)
+                        }
                     }
-                    .padding(.horizontal)
+                    .onGeometryChange(for: Double.self) { proxy in
+                        let fadeDistance = 36.0
+                        let headerBottom = max(Double(proxy.frame(in: .scrollView).maxY - proxy.safeAreaInsets.top - 128), 0)
+                        return min(max((fadeDistance - headerBottom) / fadeDistance, 0), 1)
+                    } action: { progress in
+                        headerCollapseProgress = progress
+                    }
+
+                    switch viewModel.state {
+                    case .loading:
+                        ProgressView("Loading details…")
+                            .padding(.horizontal)
+                    case .content(let detail):
+                        MusicItemDetailContentView(content: detail.content,
+                                                   loadingSectionIDs: viewModel.loadingSectionIDs,
+                                                   failedSectionIDs: viewModel.failedSectionIDs,
+                                                   loadNextPage: viewModel.loadNextPage)
+                            .padding(.horizontal, viewModel.item.type == .artist ? 0 : 16)
+                    case .unavailable:
+                        ContentUnavailableView("Music Unavailable",
+                                               systemImage: "music.note",
+                                               description: Text("This item is no longer available, or access to your music has changed."))
+                            .padding(.horizontal)
+                    case .error:
+                        VStack(spacing: 12) {
+                            Text("Couldn’t load details.")
+                            Button("Try Again", action: retry)
+                                .buttonStyle(.bordered)
+                        }
+                        .padding(.horizontal)
+                    }
                 }
+                .padding(.bottom)
             }
-            .padding(.bottom)
+            .ignoresSafeArea(edges: viewModel.item.type == .artist ? .top : [])
+            .overlay(alignment: .top) {
+                navigationBar(proxy: proxy)
+            }
         }
-        .ignoresSafeArea(edges: viewModel.item.type == .artist ? .top : [])
+        .navigationTitle(viewModel.item.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(viewModel.item.title)
+                    .font(.headline)
+                    .lineLimit(1)
+                    .opacity(headerCollapseProgress)
+                    .accessibilityHidden(true)
+            }
+        }
+        .toolbarBackground(.hidden, for: .navigationBar)
         .task(id: reloadID) {
             await viewModel.load()
         }
+    }
+    
+    private func navigationBar(proxy: GeometryProxy) -> some View {
+        VStack(spacing: 0) {
+            Rectangle()
+                .fill(.bar)
+                .frame(maxWidth: .infinity)
+                .frame(height: proxy.safeAreaInsets.top)
+                .opacity(headerCollapseProgress)
+                .allowsHitTesting(false)
+            
+            Rectangle()
+                .fill(.separator)
+                .frame(maxWidth: .infinity)
+                .frame(height: 1)
+                .opacity(headerCollapseProgress * 0.5)
+                .allowsHitTesting(false)
+        }
+        .ignoresSafeArea(edges: .top)
     }
 
     private func retry() {
