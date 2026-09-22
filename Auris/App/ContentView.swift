@@ -14,10 +14,14 @@ import SwiftUI
 struct ContentView: View {
     private let homeCoordinator: HomeCoordinator
     private let libraryCoordinator: LibraryCoordinator
+    private let searchCoordinator: SearchCoordinator
 
-    init(homeCoordinator: HomeCoordinator, libraryCoordinator: LibraryCoordinator) {
+    init(homeCoordinator: HomeCoordinator,
+         libraryCoordinator: LibraryCoordinator,
+         searchCoordinator: SearchCoordinator) {
         self.homeCoordinator = homeCoordinator
         self.libraryCoordinator = libraryCoordinator
+        self.searchCoordinator = searchCoordinator
     }
     
     var body: some View {
@@ -37,7 +41,7 @@ struct ContentView: View {
                     Label("Library", systemImage: "play.square.stack")
                 }
             
-            SearchFlowView()
+            SearchFlowView(coordinator: searchCoordinator)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }

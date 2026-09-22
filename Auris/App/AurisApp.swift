@@ -19,10 +19,17 @@ struct AurisApp: App {
     private let compositionRoot: AppCompositionRoot = AppCompositionRoot.shared
     
     var body: some Scene {
+        let homeFactory = compositionRoot.resolve((any HomeFactory).self)
+        let libraryFactory = compositionRoot.resolve((any LibraryFactory).self)
+        let searchFactory = compositionRoot.resolve((any SearchFactory).self)
+        let homeCoordinator = HomeCoordinator(factory: homeFactory)
+        let libraryCoordinator = LibraryCoordinator(factory: libraryFactory)
+        let searchCoordinator = SearchCoordinator(searchFactory: searchFactory)
+
         WindowGroup {
-            ContentView(
-                homeCoordinator: HomeCoordinator(factory: compositionRoot.resolve((any HomeFactory).self)),
-                libraryCoordinator: LibraryCoordinator(factory: compositionRoot.resolve((any LibraryFactory).self)))
+            ContentView(homeCoordinator: homeCoordinator,
+                        libraryCoordinator: libraryCoordinator,
+                        searchCoordinator: searchCoordinator)
         }
     }
 }
