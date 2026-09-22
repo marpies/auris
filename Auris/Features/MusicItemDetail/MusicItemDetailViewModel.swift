@@ -43,6 +43,8 @@ final class MusicItemDetailViewModel {
             guard loadID == requestID else { return }
             
             state = .content(musicItemDetailPresentationMapper.makeDetail(from: detail))
+        } catch is CancellationError {
+            return
         } catch {
             guard !Task.isCancelled,
                   loadID == requestID else { return }
