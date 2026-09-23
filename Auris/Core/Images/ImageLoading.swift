@@ -11,6 +11,11 @@
 
 import UIKit
 
+struct ImageLoadResult {
+    let image: UIImage
+    let wasCached: Bool
+}
+
 protocol ImageLoading {
-    func loadImage(from url: URL) async throws -> UIImage
+    func loadImage(from url: URL) async throws -> ImageLoadResult
 }

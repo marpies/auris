@@ -57,14 +57,14 @@ struct RemoteImageView<Content: View, Placeholder: View>: View {
             }
 
             do {
-                let image = try await imageLoader.loadImage(from: url)
+                let result = try await imageLoader.loadImage(from: url)
                 guard !Task.isCancelled else { return }
 
-                if reduceMotion {
-                    loadedImage = (url: url, image: image)
+                if reduceMotion || result.wasCached {
+                    loadedImage = (url: url, image: result.image)
                 } else {
                     withAnimation(.easeInOut(duration: 0.25)) {
-                        loadedImage = (url: url, image: image)
+                        loadedImage = (url: url, image: result.image)
                     }
                 }
             } catch {

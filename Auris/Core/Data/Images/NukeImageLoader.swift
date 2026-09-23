@@ -20,15 +20,19 @@ struct NukeImageLoader: ImageLoading {
         self.imagePipeline = imagePipeline
     }
 
-    func loadImage(from url: URL) async throws -> UIImage {
+    func loadImage(from url: URL) async throws -> ImageLoadResult {
+        let request: ImageRequest
+
         if url.scheme?.lowercased() == String.musicKitScheme {
-            let request = ImageRequest(id: url.absoluteString, data: {
+            request = ImageRequest(id: url.absoluteString, data: {
                 let (data, _) = try await URLSession.shared.data(for: URLRequest(url: url))
                 return data
             })
-            return try await imagePipeline.image(for: request)
+        } else {
+            request = ImageRequest(url: url)
         }
 
-        return try await imagePipeline.image(for: url)
+        let response = try await imagePipeline.imageTask(with: request).response
+        return ImageLoadResult(image: response.image, wasCached: response.cacheType != nil)
     }
 }
