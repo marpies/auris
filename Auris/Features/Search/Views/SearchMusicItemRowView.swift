@@ -22,13 +22,14 @@ struct SearchMusicItemRowView: View {
                     .fill(.secondary.opacity(0.15))
 
                 if let imageURL = item.imageURL {
-                    AsyncImage(url: imageURL) { image in
+                    RemoteImageView(url: imageURL) { image in
                         image
                             .resizable()
                             .scaledToFill()
                     } placeholder: {
                         Image(systemName: itemIcon)
                             .foregroundStyle(.secondary)
+                            .frame(width: 56, height: 56)
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 } else {

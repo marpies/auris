@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C35777A83057F3890095956D /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = C35777A73057F3890095956D /* Swinject */; };
+		C3B20FFB3063930100C83C98 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = C3B20FFA3063930100C83C98 /* Nuke */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C35777A83057F3890095956D /* Swinject in Frameworks */,
+				C3B20FFB3063930100C83C98 /* Nuke in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +133,7 @@
 			name = Auris;
 			packageProductDependencies = (
 				C35777A73057F3890095956D /* Swinject */,
+				C3B20FFA3063930100C83C98 /* Nuke */,
 			);
 			productName = Auris;
 			productReference = C35777673057E86B0095956D /* Auris.app */;
@@ -217,6 +220,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C35777A63057F3890095956D /* XCRemoteSwiftPackageReference "Swinject" */,
+				C3B20FF93063930100C83C98 /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C35777683057E86B0095956D /* Products */;
@@ -621,6 +625,14 @@
 				minimumVersion = 2.10.0;
 			};
 		};
+		C3B20FF93063930100C83C98 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -628,6 +640,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C35777A63057F3890095956D /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
+		};
+		C3B20FFA3063930100C83C98 /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3B20FF93063930100C83C98 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

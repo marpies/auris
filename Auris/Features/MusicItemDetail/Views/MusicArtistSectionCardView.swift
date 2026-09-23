@@ -39,7 +39,7 @@ struct MusicArtistSectionCardView: View {
                 RoundedRectangle(cornerRadius: artworkCornerRadius)
                     .fill(.quaternary)
 
-                AsyncImage(url: musicItem.imageURL) { image in
+                RemoteImageView(url: musicItem.imageURL) { image in
                     image
                         .resizable()
                         .scaledToFill()

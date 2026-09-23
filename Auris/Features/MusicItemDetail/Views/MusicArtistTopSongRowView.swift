@@ -16,7 +16,7 @@ struct MusicArtistTopSongRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: musicItem.imageURL) { image in
+            RemoteImageView(url: musicItem.imageURL) { image in
                 image
                     .resizable()
                     .scaledToFill()

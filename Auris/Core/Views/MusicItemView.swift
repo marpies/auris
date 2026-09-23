@@ -41,8 +41,8 @@ struct MusicItemView: View {
                         .fill(Color(.secondarySystemBackground))
                         .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 3)
                     
-                    if let artworkURL = item.imageURL {
-                        AsyncImage(url: artworkURL) { image in
+                    if let artworkURL = item.imageURL {                        
+                        RemoteImageView(url: artworkURL) { image in
                             image
                                 .resizable()
                                 .scaledToFit()

@@ -41,6 +41,7 @@ final class AppCompositionRoot: ResolverProvider {
     
     func register() {
         let assemblies: [SafeAssembly] = [
+            ImageAssembly(),
             HomeAssembly(),
             LibraryAssembly(),
             SearchAssembly()

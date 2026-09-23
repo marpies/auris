@@ -13,4 +13,5 @@ import Foundation
 
 extension String {
     static let empty: String = ""
+    static let musicKitScheme: String = "musickit"
 }
