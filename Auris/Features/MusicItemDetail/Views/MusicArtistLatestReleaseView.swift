@@ -22,7 +22,7 @@ struct MusicArtistLatestReleaseView: View {
 
             NavigationLink(value: musicItem) {
                 HStack(spacing: 16) {
-                    AsyncImage(url: musicItem.imageURL) { image in
+                    RemoteImageView(url: musicItem.imageURL) { image in
                         image
                             .resizable()
                             .scaledToFill()

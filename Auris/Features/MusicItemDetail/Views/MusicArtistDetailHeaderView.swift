@@ -20,7 +20,7 @@ struct MusicArtistDetailHeaderView: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            AsyncImage(url: imageURL) { image in
+            RemoteImageView(url: imageURL) { image in
                 image
                     .resizable()
                     .scaledToFill()

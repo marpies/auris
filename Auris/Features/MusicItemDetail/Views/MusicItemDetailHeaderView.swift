@@ -34,7 +34,7 @@ struct MusicItemDetailHeaderView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            AsyncImage(url: imageURL) { image in
+            RemoteImageView(url: imageURL) { image in
                 image
                     .resizable()
                     .scaledToFit()

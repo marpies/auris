@@ -22,6 +22,7 @@ struct AurisApp: App {
         let homeFactory = compositionRoot.resolve((any HomeFactory).self)
         let libraryFactory = compositionRoot.resolve((any LibraryFactory).self)
         let searchFactory = compositionRoot.resolve((any SearchFactory).self)
+        let imageLoader = compositionRoot.resolve((any ImageLoading).self)
         let homeCoordinator = HomeCoordinator(factory: homeFactory)
         let libraryCoordinator = LibraryCoordinator(factory: libraryFactory)
         let searchCoordinator = SearchCoordinator(searchFactory: searchFactory)
@@ -30,6 +31,7 @@ struct AurisApp: App {
             ContentView(homeCoordinator: homeCoordinator,
                         libraryCoordinator: libraryCoordinator,
                         searchCoordinator: searchCoordinator)
+                .environment(\.imageLoader, imageLoader)
         }
     }
 }
